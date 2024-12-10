@@ -15,6 +15,23 @@ router.post('/sign-in',
   authController.signIn
 );
 
+router.post('/google-signup',
+  validateRequest,
+  authController.googleSignUp
+);
+
+router.post('/google-signin',
+  validateRequest,
+  authController.googleSignIn
+);
+
+router.put('/create-profile/:id', authController.createProfile);
+
+router.post("/google-signin", 
+  validateRequest,
+  authController.googleSignIn
+)
+
 router.delete('/sign-out', authMiddleware, authController.signOut)
 
 export default router;
