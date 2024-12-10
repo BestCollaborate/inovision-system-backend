@@ -188,8 +188,8 @@ export const authService = {
       const update = await docRef.update(upData.data);
       console.log('update==', update, docRef);
       const additionalClaims = {
-        username: upData.username,
-        role: upData.role,
+        username: upData.data.username,
+        role: upData.data.role,
       };
       // Get the user's ID token
       console.log('tokenid', upData.uid);
