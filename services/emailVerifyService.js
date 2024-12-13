@@ -23,7 +23,7 @@ export const sendVerificationEmail = async (email, verificationLink) => {
 
   try {
     const mailOptions = {
-      from: 'Inovision TEAM <mailgun@sandbox0d9f1fbcad704b10a06dd5df74fdec02.mailgun.org>',
+      from: 'Inovision TEAM <mailgun@uneoka-system.com>',
       to: email,
       subject: 'メールアドレスを確認',
       html: `
@@ -36,6 +36,6 @@ export const sendVerificationEmail = async (email, verificationLink) => {
     return await mg.messages.create(process.env.MAILGUN_DOMAIN, mailOptions);
   } catch (error) {
     console.error('Error sending verification email:', error);
-    return false;
+    throw new Error(error);
   }
 };
