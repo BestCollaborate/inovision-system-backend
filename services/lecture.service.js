@@ -22,7 +22,7 @@ const lectureService = {
     getLectures: async (uid) => {
         try {
             const snapshot = await db.collection('lecture').doc(uid).get();
-            return snapshot.data().lectures;
+            return snapshot.data()?.lectures || [];
         } catch (error) {
             console.log(error);
             throw error;
