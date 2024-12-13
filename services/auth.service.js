@@ -97,7 +97,6 @@ export const authService = {
         userInfo.passwordHash,
         userInfo.passwordSalt
       );
-
       if (!isPasswordValid) {
         throw new Error('Invalid email or password');
       };
