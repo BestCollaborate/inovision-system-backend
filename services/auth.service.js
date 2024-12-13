@@ -6,10 +6,10 @@ import { jwtDecode } from "jwt-decode";
 
 export const authService = {
   signUp: async (userData) => {
-    const { email, password, username } = userData;
+    const { email, password, role } = userData;
 
     try {
-      console.log('Creating user with data:', { email, username, password });
+      console.log('Creating user with data:', { email, role, password });
       const { hash, salt } = await helperService.hashPassword(password);
 
       // Create Firebase auth user
@@ -17,7 +17,6 @@ export const authService = {
         email,
         password,
         emailVerified: false,
-        displayName: username
       });
 
       console.log('Firebase Auth user created successfully:', userRecord.uid);
@@ -25,28 +24,48 @@ export const authService = {
       // const verificationLink = await auth.generateEmailVerificationLink(email);
 
       // Store additional user data in Firestore
-      const userDocRef = db.collection('users').doc(userRecord.uid);
-      await userDocRef.set({
-        username,
-        fullname: "",
-        furigana: "",
-        gender: "",
-        role: "",
-        email,
-        passwordHash: hash,
-        passwordSalt: salt,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      });
+      if (role === "teacher") {
+        const teacherDoc = db.collection(role).doc(userRecord.uid);
+        await teacherDoc.set({
+          username: "",
+          fullname: "",
+          furigana: "",
+          gender: "",
+          role: role,
+          email,
+          passwordHash: hash,
+          passwordSalt: salt,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+      } else {
+        const parentDoc = db.collection(role).doc(userRecord.uid);
+        await parentDoc.set({
+          fullname: "",
+          furigana: "",
+          gender: "",
+          role: role,
+          email,
+          phonenumber: "",
+          passwordHash: hash,
+          passwordSalt: salt,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+      }
+
       // try {
       //   const emailVerified = await sendVerificationEmail(email, verificationLink);
       //   console.log('emailverified', emailVerified);
       // } catch (error) {
       //   console.error('verifyerror', error);
+      //   throw new Error("Can not send verify email");
       // }
 
       console.log('User data stored in Firestore successfully');
-      return userRecord.uid;
+      return {
+        uid: userRecord.uid,
+      };
     } catch (error) {
       console.error('Error in createUser:', error);
       throw error;
@@ -54,8 +73,8 @@ export const authService = {
   },
   signInUser: async (signInData) => {
     try {
-      const { email, password } = signInData;
-      console.log('login info', email, password);
+      const { email, password, role } = signInData;
+      // console.log('login info', email, password);
 
       const userCredential = await auth.getUserByEmail(email);
       console.log('user======', userCredential);
@@ -65,7 +84,7 @@ export const authService = {
       // };
 
       // Get additional user data from Firestore
-      const userDoc = await db.collection('users').doc(userCredential.uid).get();
+      const userDoc = await db.collection(role).doc(userCredential.uid).get();
       if (!userDoc.exists) {
         console.log('No such user document!');
         return;
@@ -101,10 +120,11 @@ export const authService = {
       throw new Error('Invalid email or password');
     }
   },
-  googleSignUp: async (token) => {
+  googleSignUp: async (data) => {
     // const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-    const ticket = jwtDecode(token);
+    const { id_token, role } = data;
+    console.log(data);
+    const ticket = jwtDecode(id_token);
     // console.log('google servise', ticket);
     const { email, family_name, given_name } = ticket;
     const userRecord = await auth.getUserByEmail(email).catch(() => null);
@@ -116,13 +136,11 @@ export const authService = {
           displayName: family_name,
         });
 
-        const userDocRef = db.collection('users').doc(newUser.uid);
+        const userDocRef = db.collection(role).doc(newUser.uid);
         await userDocRef.set({
-          username: family_name,
           fullname: `${family_name} ${given_name}`,
           furigana: "",
-          gender: "",
-          role: "",
+          role: role,
           email,
           passwordHash: "",
           passwordSalt: "",
@@ -144,17 +162,18 @@ export const authService = {
       }
     }
   },
-  googleSignIn: async (id_token) => {
+  googleSignIn: async (data) => {
     try {
+      const { id_token, role } = data;
       const ticket = jwtDecode(id_token);
-      console.log('google servise', ticket);
+      console.log('google servise', data);
       const { email } = ticket;
 
       const userCredential = await auth.getUserByEmail(email);
       console.log('user======', userCredential);
 
       // Get additional user data from Firestore
-      const userDoc = await db.collection('users').doc(userCredential.uid).get();
+      const userDoc = await db.collection(role).doc(userCredential.uid).get();
       if (!userDoc.exists) {
         console.log('No such user document!');
         return;
@@ -165,6 +184,7 @@ export const authService = {
 
       const additionalClaims = {
         username: userInfo.username,
+        fullname: userInfo.fullname,
         role: userInfo.role,
       };
       // Get the user's ID token
@@ -181,15 +201,16 @@ export const authService = {
   },
   createPrifile: async (upData) => {
     console.log(upData);
+    const { role, username } = upData.data;
     try {
-      const docRef = db.collection('users').doc(upData.uid);
+      const docRef = db.collection(role).doc(upData.uid);
 
       // Update document
       const update = await docRef.update(upData.data);
       console.log('update==', update, docRef);
       const additionalClaims = {
-        username: upData.data.username,
-        role: upData.data.role,
+        username: username,
+        role: role
       };
       // Get the user's ID token
       console.log('tokenid', upData.uid);

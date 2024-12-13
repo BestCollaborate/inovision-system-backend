@@ -4,6 +4,9 @@ const router = express.Router();
 
 import authRoutes from './authRoutes';
 import lectureRoutes from './lecture.route';
+import authRoutes from './auth.route';
+import adminRoutes from './admin.route';
+import userRoutes from './user.route';
 
 const defaultRoutes = [
   {
@@ -13,6 +16,14 @@ const defaultRoutes = [
   {
     path: '/lecture',
     route: lectureRoutes,
+  },
+  {
+    path: '/admin',
+    route: adminRoutes,
+  },
+  {
+    path: '/users',
+    route: userRoutes,
   }
 ];
 

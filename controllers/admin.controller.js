@@ -20,7 +20,5 @@ export const adminController = {
     } catch (error) {
       console.error('管理者はすでに存在します:');
     }
-
   }
-
 }

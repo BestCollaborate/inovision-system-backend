@@ -7,16 +7,17 @@ export const authController = {
   signUp: async (req, res) => {
     console.log('signup', req.body);
     try {
-      const { email, password, username } = req.body;
+      const { email, password } = req.body.data;
+      const role = req.body.role;
       const userRecord = await authService.signUp({
         email,
         password,
-        username
+        role
       });
       console.log('userRecode', userRecord);
 
       res.status(StatusCodes.CREATED).json(
-        createResponse(true, '成果的に登録されました。', { uid: userRecord })
+        createResponse(true, '成果的に登録されました。', { uid: userRecord.uid })
       );
     } catch (error) {
       console.error('Error creating user:', error);
@@ -27,10 +28,11 @@ export const authController = {
   },
   signIn: async (req, res) => {
     try {
-      const { email, password } = req.body;
+      const { email, password } = req.body.data;
+      const role = req.body.role
       console.log('login controller', email, password);
 
-      const userCredential = await authService.signInUser({ email, password });
+      const userCredential = await authService.signInUser({ email, password, role });
       console.log('userCredential', userCredential);
       res.status(StatusCodes.OK).json(
         createResponse(true, 'ログインに成功しました。', {
@@ -47,8 +49,9 @@ export const authController = {
   googleSignUp: async (req, res) => {
     // console.log("google signup", req.body.data);
     try {
-      const Id_token = req.body.data;
-      const userCredential = await authService.googleSignUp(Id_token);
+      const { id_token, role } = req.body;
+      console.log('google controller', role);
+      const userCredential = await authService.googleSignUp({ id_token, role });
       console.log('google controller', userCredential);
       if (userCredential.success) {
         res.status(StatusCodes.CREATED).json(
@@ -71,9 +74,10 @@ export const authController = {
     }
   },
   googleSignIn: async (req, res) => {
-    console.log('google-signin', req.body.id_token);
+    console.log('google-signin', req.body);
+    const { id_token, role } = req.body.payload;
     try {
-      const userCredential = await authService.googleSignIn(req.body.id_token);
+      const userCredential = await authService.googleSignIn({ id_token, role });
       console.log('userCredential', userCredential);
       res.status(StatusCodes.OK).json(
         createResponse(true, 'ログインに成功しました。', {
