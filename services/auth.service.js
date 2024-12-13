@@ -103,8 +103,8 @@ export const authService = {
       };
 
       const additionalClaims = {
-        username: userInfo.role,
-        role: userInfo.username,
+        username: userInfo.username,
+        role: userInfo.role,
       };
       // Get the user's ID token
       console.log('tokenid', userCredential.uid);
