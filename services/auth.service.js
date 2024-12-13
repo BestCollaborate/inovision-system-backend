@@ -97,14 +97,13 @@ export const authService = {
         userInfo.passwordHash,
         userInfo.passwordSalt
       );
-
       if (!isPasswordValid) {
         throw new Error('Invalid email or password');
       };
 
       const additionalClaims = {
-        username: userInfo.role,
-        role: userInfo.username,
+        username: userInfo.username,
+        role: userInfo.role,
       };
       // Get the user's ID token
       console.log('tokenid', userCredential.uid);
