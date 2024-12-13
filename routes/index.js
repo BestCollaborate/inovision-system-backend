@@ -2,7 +2,6 @@ import express from 'express';
 
 const router = express.Router();
 
-import authRoutes from './authRoutes';
 import lectureRoutes from './lecture.route';
 import authRoutes from './auth.route';
 import adminRoutes from './admin.route';
