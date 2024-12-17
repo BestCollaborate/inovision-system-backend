@@ -1,3 +1,4 @@
+import { get } from 'http';
 import { auth, db } from '../config/config';
 import { firebase } from 'firebase/app';
 // import 'firebase/firestore';
@@ -22,7 +23,32 @@ const lectureService = {
     getLectures: async (uid) => {
         try {
             const snapshot = await db.collection('lecture').doc(uid).get();
-            return snapshot.data().lectures;
+            return snapshot.data()?.lectures || [];
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    },
+    validateLecture: async (data) => {
+        const { uid, lectureId, role } = data;
+        console.log(data);
+        try {
+            if(role !== 'teacher' && role !== 'student') {
+                return { result: "invalid", message: 'Invalid role' };
+            }
+            const userData = await db.collection(role).doc(uid).get();
+            const lectureData = await db.collection('lecture').doc(uid).get();
+            const lecture = lectureData.data().lectures.find(lecture => lecture.id === lectureId);
+
+            if (!userData.exists) {
+                return { result: "invalid", message: 'User not found' };
+            } else if(!lecture) {
+                return { result: "invalid", message: 'Lecture not found' };
+            } else if (lecture.status === 'in-progress' && role === 'teacher' && lecture.teacherId !== uid) {
+                return { result: "invalid", message: 'Lecture is in progress' };
+            } else {
+                return { result: "success", message: 'Success' };
+            }
         } catch (error) {
             console.log(error);
             throw error;

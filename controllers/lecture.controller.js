@@ -23,7 +23,16 @@ exports.getLectures = (req, res) => {
       res.status(500).json(error);
     });
 };
-
+exports.validateLecture = (req, res) => {
+  lectureService.validateLecture(req.params)
+    .then((result) => {
+      console.log(result)
+      res.status(200).json(result);
+    })
+    .catch((error) => {
+      res.status(500).json(error);
+    });
+};
 exports.getFreeLecture = (req, res) => {
   lectureService.getFreeLecture()
     .then((result) => {

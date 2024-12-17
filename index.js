@@ -1,9 +1,14 @@
 import app from './app';
+import socket_server from './socket';
 import logger from './config/logger';
 
 let server = app;
 server.listen(process.env.PORT, () => {
   logger.info(`Listening to port ${process.env.PORT}`);
+});
+
+socket_server.listen(parseInt(process.env.PORT) + 1, () => {
+  logger.info(`Socket listening to port ${process.env.PORT + 1}`);
 });
 
 const exitHandler = () => {
