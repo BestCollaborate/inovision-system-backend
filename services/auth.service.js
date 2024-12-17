@@ -116,7 +116,7 @@ export const authService = {
       };
     } catch (error) {
       console.error('Error in signInUser:', error);
-      throw new Error('Invalid email or password');
+      throw new Error('メールアドレスまたはパスワードが無効です。');
     }
   },
   googleSignUp: async (data) => {

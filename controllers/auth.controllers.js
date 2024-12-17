@@ -42,7 +42,7 @@ export const authController = {
     } catch (error) {
       console.error('Error signing in:', error);
       res.status(StatusCodes.UNAUTHORIZED).json(
-        createResponse(false, 'ログインに失敗しました。', null, error.message)
+        createResponse(false, error.message)
       );
     }
   },
@@ -86,9 +86,11 @@ export const authController = {
       );
     } catch (error) {
       console.error('Error signing in:', error);
-      res.status(StatusCodes.UNAUTHORIZED).json(
-        createResponse(false, 'ログインに失敗しました。', null, error.message)
-      );
+      // res.status(StatusCodes.UNAUTHORIZED).json(
+      //   createResponse(false, 'ログインに失敗しました。', null, error.message)
+      // );
+      throw new Error("ログインに失敗しました。");
+
     }
   },
   createProfile: async (req, res) => {
