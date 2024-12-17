@@ -116,7 +116,46 @@ export const authService = {
       };
     } catch (error) {
       console.error('Error in signInUser:', error);
-      throw new Error('Invalid email or password');
+      throw new Error('メールアドレスまたはパスワードが無効です。');
+    }
+  },
+  signInStudent: async (signInData) => {
+    try {
+      const { username, password, role } = signInData;
+      console.log('login info', username, password);
+
+      // Get additional user data from Firestore
+      const userDoc = await db.collection(role).doc(username).get();
+      if (!userDoc.exists) {
+        console.log('No such user document!');
+        return;
+      }
+      const userInfo = userDoc.data();
+      console.log('userDoc', userInfo);
+
+      const isPasswordValid = await helperService.verifyPasswordHash(
+        password,
+        userInfo.passwordHash,
+        userInfo.passwordSalt
+      );
+      if (!isPasswordValid) {
+        throw new Error('Invalid email or password');
+      };
+
+      const additionalClaims = {
+        role: userInfo.role,
+        fullname: userInfo.fullname,
+      };
+      
+      const token = await auth.createCustomToken(userInfo.username, additionalClaims);
+      console.log('token==', token);
+
+      return {
+        token: token
+      };
+    } catch (error) {
+      console.error('Error in signInUser:', error);
+      throw new Error('メールアドレスまたはパスワードが無効です。');
     }
   },
   googleSignUp: async (data) => {

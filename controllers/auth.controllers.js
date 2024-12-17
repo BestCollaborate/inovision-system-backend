@@ -28,21 +28,30 @@ export const authController = {
   },
   signIn: async (req, res) => {
     try {
-      const { email, password } = req.body.data;
       const role = req.body.role
-      console.log('login controller', email, password);
-
-      const userCredential = await authService.signInUser({ email, password, role });
-      console.log('userCredential', userCredential);
-      res.status(StatusCodes.OK).json(
-        createResponse(true, 'ログインに成功しました。', {
-          token: userCredential.token
-        })
-      );
+      if (role === 'student') {
+        const { username, password } = req.body.data;
+        const userCredential = await authService.signInStudent({ username, password, role });
+        console.log('userCredential', userCredential);
+        res.status(StatusCodes.OK).json(
+          createResponse(true, 'ログインに成功しました。', {
+            token: userCredential.token
+          })
+        );
+      } else {
+        const { email, password } = req.body.data;
+        const userCredential = await authService.signInUser({ email, password, role });
+        console.log('userCredential', userCredential);
+        res.status(StatusCodes.OK).json(
+          createResponse(true, 'ログインに成功しました。', {
+            token: userCredential.token
+          })
+        );
+      }
     } catch (error) {
       console.error('Error signing in:', error);
       res.status(StatusCodes.UNAUTHORIZED).json(
-        createResponse(false, 'ログインに失敗しました。', null, error.message)
+        createResponse(false, error.message)
       );
     }
   },
@@ -86,9 +95,11 @@ export const authController = {
       );
     } catch (error) {
       console.error('Error signing in:', error);
-      res.status(StatusCodes.UNAUTHORIZED).json(
-        createResponse(false, 'ログインに失敗しました。', null, error.message)
-      );
+      // res.status(StatusCodes.UNAUTHORIZED).json(
+      //   createResponse(false, 'ログインに失敗しました。', null, error.message)
+      // );
+      throw new Error("ログインに失敗しました。");
+
     }
   },
   createProfile: async (req, res) => {
