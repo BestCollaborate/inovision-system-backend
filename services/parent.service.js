@@ -45,16 +45,17 @@ export const parentService = {
       const studentsRef = db.collection('student');
       // console.log(studentsRef);
       
-      const snapshot = await studentsRef.where('username', '==', "sasaki").get();
-      if (!snapshot.exists) {
+      const snapshot = await studentsRef.where('parentId', '==', parentId).get();
+      // console.log(snapshot);
+      if (snapshot.empty) {
         throw new Error("ユーザーが存在しません");
       }
       const children = [];
       snapshot.forEach(doc => {
-        children.push({ id: doc.id, ...doc.data() });
+        console.log("docmenter", doc);
+        children.push({ id: doc.username, ...doc.data() });
       });
-      console.log(snapshot);
-      return doc.data();
+      return children;
     } catch (error) {
       console.log(error);
       throw new Error(error);

@@ -22,15 +22,13 @@ export const parentController = {
   getChild: async (req, res) => {
     try {
       const parentId = req.params.id;
-      console.log("parentId", parentId);
-      const child = await parentService.getChild({ parentId });
-      console.log("getChild", child);
+      const children = await parentService.getChild({ parentId });
       res.status(StatusCodes.OK).json(
-        createResponse(true, child)
+        createResponse(true, "", children)
       );
     } catch (error) {
       console.error('');
-      res.status(StatusCodes.BAD_REQUEST).json(
+      res.status(StatusCodes.NOT_FOUND).json(
         createResponse(false, error.message)
       );
     }
