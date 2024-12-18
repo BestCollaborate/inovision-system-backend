@@ -24,7 +24,9 @@ exports.getLectures = (req, res) => {
     });
 };
 exports.validateLecture = (req, res) => {
-  lectureService.validateLecture(req.params)
+  const { uid, lectureId, role } = req.params;
+  const teacherId = (role === "student" ? req.query.teacherId : "")
+  lectureService.validateLecture({ uid, lectureId, role, teacherId })
     .then((result) => {
       console.log(result)
       res.status(200).json(result);
