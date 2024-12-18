@@ -32,5 +32,37 @@ export const parentController = {
         createResponse(false, error.message)
       );
     }
-  }
+  },
+  changeChild: async (req, res) => {
+    try {
+      const username = req.params.id;
+      const changeData = req.body;
+      console.log(changeData);
+      const children = await parentService.changeChild({ changeData, username });
+      res.status(StatusCodes.OK).json(
+        createResponse(true, "正常に変更されました。")
+      );
+    } catch (error) {
+      console.error('');
+      res.status(StatusCodes.NOT_FOUND).json(
+        createResponse(false, error.message)
+      );
+    }
+  },
+  deleteChild: async (req, res) => {
+    try {
+      const username = req.params.id;
+      console.log(username);
+      
+      await parentService.deleteChild(username);
+      res.status(StatusCodes.OK).json(
+        createResponse(true, "正常に削除されました。")
+      );
+    } catch (error) {
+      console.log(error);
+      res.status(StatusCodes.NOT_FOUND).json(
+        createResponse(false, error.message)
+      );
+    }
+  },
 }

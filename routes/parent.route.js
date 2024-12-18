@@ -12,6 +12,14 @@ router.get('/get-child/:id',
   parentController.getChild
 );
 
+router.put('/change-child/:id',
+  parentController.changeChild
+);
+
+router.delete('/delete-child/:id',
+  parentController.deleteChild
+);
+
 // router.delete('/sign-out', authMiddleware, authController.signOut)
 
 export default router;
