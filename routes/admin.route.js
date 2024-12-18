@@ -7,6 +7,22 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 
 router.get('/get-teachers', adminController.getTeachers);
 
+router.put('/update-teacher/:id', adminController.updateTeacher);
+
+router.delete("/delete-teacher/:id", adminController.deleteTeacher);
+
+router.get("/get-parents", adminController.getParents);
+
+router.put("/update-parent/:id", adminController.updateParent); 
+
+router.delete("/delete-parent/:id", adminController.deleteParent);
+
+router.get("/get-students", adminController.getStudents);
+
+router.put("/update-student/:id", adminController.updateStudent);
+
+router.delete("/delete-student/:id", adminController.deleteStudent);
+
 // router.post('/sign-up',
 //   validateRequest,
 //   authController.signUp

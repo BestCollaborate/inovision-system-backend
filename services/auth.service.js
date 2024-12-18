@@ -19,6 +19,8 @@ export const authService = {
         emailVerified: false,
       });
 
+      auth.delete()
+
       console.log('Firebase Auth user created successfully:', userRecord.uid);
       // Send verification email
       // const verificationLink = await auth.generateEmailVerificationLink(email);
@@ -42,9 +44,9 @@ export const authService = {
       } else {
         const parentDoc = db.collection(role).doc(userRecord.uid);
         await parentDoc.set({
+          uid: userRecord.uid,
           fullname: "",
           furigana: "",
-          gender: "",
           role: role,
           email,
           phonenumber: "",
