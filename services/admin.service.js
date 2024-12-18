@@ -40,12 +40,29 @@ export const adminService = {
       throw error;
     }
   },
+  getTeachers: async () => {
+    try {
+      const teacherRef = await db.collection('teacher').get();
+      if (teacherRef.empty) {
+        throw new Error("ユーザーが存在しません");
+      } else {
+        const teachers = teacherRef.docs.map(doc => ({
+          id: doc.uid,   // Document ID
+          ...doc.data() // Document data
+        }));
+        console.log("teacherRef", teachers);
+        // return teacherRef.docs()
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
   deleteAdmin: async () => {
     try {
       console.log('delete');
       await auth.deleteUser("L0z7du5hzsYCz8f8Sy3OF5TdaZe2");
       console.log('deleteadmin');
-      
+
     } catch (error) {
     }
   }

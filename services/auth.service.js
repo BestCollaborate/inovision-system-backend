@@ -27,6 +27,7 @@ export const authService = {
       if (role === "teacher") {
         const teacherDoc = db.collection(role).doc(userRecord.uid);
         await teacherDoc.set({
+          uid: userRecord.uid,
           username: "",
           fullname: "",
           furigana: "",
@@ -146,7 +147,7 @@ export const authService = {
         role: userInfo.role,
         fullname: userInfo.fullname,
       };
-      
+
       const token = await auth.createCustomToken(userInfo.username, additionalClaims);
       console.log('token==', token);
 
@@ -176,6 +177,7 @@ export const authService = {
 
         const userDocRef = db.collection(role).doc(newUser.uid);
         await userDocRef.set({
+          uid: newUser.uid,
           fullname: `${family_name} ${given_name}`,
           furigana: "",
           role: role,
@@ -245,7 +247,6 @@ export const authService = {
 
       // Update document
       const update = await docRef.update(upData.data);
-      console.log('update==', update, docRef);
       const additionalClaims = {
         username: username,
         role: role

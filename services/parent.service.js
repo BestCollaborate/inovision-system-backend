@@ -40,11 +40,9 @@ export const parentService = {
   getChild: async (getData) => {
     const { parentId } = getData;
     try {
-      console.log("getChildserver", parentId);
-      
       const studentsRef = db.collection('student');
       // console.log(studentsRef);
-      
+
       const snapshot = await studentsRef.where('parentId', '==', parentId).get();
       // console.log(snapshot);
       if (snapshot.empty) {
@@ -52,28 +50,32 @@ export const parentService = {
       }
       const children = [];
       snapshot.forEach(doc => {
-        console.log("docmenter", doc);
         children.push({ id: doc.username, ...doc.data() });
       });
       return children;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+  changeChild: async ({ changeData, username }) => {
+    try {
+      const docRef = db.collection("student").doc(username);
+
+      // Update document
+      const update = await docRef.update(changeData);
+
+      return;
     } catch (error) {
       console.log(error);
       throw new Error(error);
     }
   },
-  changeChild: async () => {
+  deleteChild: async (username) => {
     try {
-      console.log("deletechild");
-    } catch (error) {
-      throw new Error(error);
-    }
-  },
-  deleteChild: async () => {
-    try {
-      console.log('delete');
-      await auth.deleteUser("L0z7du5hzsYCz8f8Sy3OF5TdaZe2");
-      console.log('deleteadmin');
-
+      console.log('deleteadmin', username);
+      const docRef = db.collection('student').doc(username);
+      await docRef.delete();
+      return;
     } catch (error) {
       throw new Error("");
     }
