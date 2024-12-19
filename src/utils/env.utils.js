@@ -2,15 +2,13 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 
-function initializeEnv() {
+if (process.env.NODE_ENV !== 'production') {
   const envPath = path.resolve(process.cwd(), '.env');
-  if (!fs.existsSync(envPath)) {
-    console.error('\x1b[31m%s\x1b[0m', 'Error: .env file not found!');
-    console.log('\x1b[33m%s\x1b[0m', 'Please create a .env file using .env.example as a template.');
-    process.exit(1);
+  if (fs.existsSync(envPath)) {
+    dotenv.config();
+  } else {
+    console.warn('\x1b[33m%s\x1b[0m', 'Warning: .env file not found, but ignoring in production environment.');
   }
-
-  dotenv.config();
 }
 
 initializeEnv();
