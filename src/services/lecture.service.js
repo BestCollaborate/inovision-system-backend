@@ -30,19 +30,20 @@ const lectureService = {
         }
     },
     validateLecture: async (data) => {
-        const { uid, lectureId, role } = data;
+        const { uid, lectureId, role, teacherId } = data;
+
         console.log(data);
         try {
-            if(role !== 'teacher' && role !== 'student') {
+            if (role !== 'teacher' && role !== 'student') {
                 return { result: "invalid", message: 'Invalid role' };
             }
             const userData = await db.collection(role).doc(uid).get();
-            const lectureData = await db.collection('lecture').doc(uid).get();
+            const lectureData = await db.collection('lecture').doc(role === "teacher" ? uid : teacherId).get();
             const lecture = lectureData.data().lectures.find(lecture => lecture.id === lectureId);
 
             if (!userData.exists) {
                 return { result: "invalid", message: 'User not found' };
-            } else if(!lecture) {
+            } else if (!lecture) {
                 return { result: "invalid", message: 'Lecture not found' };
             } else if (lecture.status === 'in-progress' && role === 'teacher' && lecture.teacherId !== uid) {
                 return { result: "invalid", message: 'Lecture is in progress' };
@@ -77,7 +78,7 @@ const lectureService = {
             const freeLectures = docs.filter(lecture => lecture.type === 'FREE');
             const mapToLectureInfo = async () => {
                 const lectureInfo = await Promise.all(freeLectures.map(async (lecture) => {
-                    const teacherSnapshot = await db.collection('users').doc(lecture.teacherId).get();
+                    const teacherSnapshot = await db.collection('teacher').doc(lecture.teacherId).get();
                     const teacherData = teacherSnapshot.data();
                     console.log("=====>", teacherData);
                     return {
@@ -91,7 +92,7 @@ const lectureService = {
                 console.log(lectureInfo);
                 return lectureInfo;
             };
-            console.log(docs);  
+            console.log(docs);
             return await mapToLectureInfo();
         } catch (error) {
             console.log(error);
