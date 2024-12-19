@@ -11,7 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-initializeEnv();
+// initializeEnv();
 
 export const loadEnvConfig = () => {
   try {
