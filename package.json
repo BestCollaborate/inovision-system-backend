@@ -49,6 +49,7 @@
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.7",
     "remark-gfm": "^4.0.0",
+    "rimraf": "^6.0.1",
     "socket.io": "^4.8.1",
     "swagger-ui-express": "^5.0.1",
     "textract": "^2.5.0",
