@@ -88,7 +88,7 @@ export const authService = {
 
       // Get additional user data from Firestore
       const userDoc = await db.collection(role).doc(userCredential.uid).get();
-      if (!userDoc.exists) {
+      if (userDoc.empty) {
         console.log('No such user document!');
         return;
       }
@@ -115,7 +115,8 @@ export const authService = {
       console.log('token==', token);
 
       return {
-        token: token
+        token: token,
+        user: additionalClaims
       };
     } catch (error) {
       console.error('Error in signInUser:', error);
@@ -129,7 +130,7 @@ export const authService = {
 
       // Get additional user data from Firestore
       const userDoc = await db.collection(role).doc(username).get();
-      if (!userDoc.exists) {
+      if (userDoc.empty) {
         console.log('No such user document!');
         return;
       }
@@ -154,6 +155,7 @@ export const authService = {
       console.log('token==', token);
 
       return {
+        user: additionalClaims,
         token: token
       };
     } catch (error) {

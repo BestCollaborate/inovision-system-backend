@@ -34,18 +34,14 @@ export const authController = {
         const userCredential = await authService.signInStudent({ username, password, role });
         console.log('userCredential', userCredential);
         res.status(StatusCodes.OK).json(
-          createResponse(true, 'ログインに成功しました。', {
-            token: userCredential.token
-          })
+          createResponse(true, 'ログインに成功しました。', userCredential)
         );
       } else {
         const { email, password } = req.body.data;
         const userCredential = await authService.signInUser({ email, password, role });
         console.log('userCredential', userCredential);
         res.status(StatusCodes.OK).json(
-          createResponse(true, 'ログインに成功しました。', {
-            token: userCredential.token
-          })
+          createResponse(true, 'ログインに成功しました。', userCredential)
         );
       }
     } catch (error) {
