@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import { authService } from '../services/auth.service.js';
 import { createResponse } from '../utils/response.utils.js';
+import { log } from 'winston';
 
 export const authController = {
   signUp: async (req, res) => {
@@ -29,6 +30,9 @@ export const authController = {
   signIn: async (req, res) => {
     try {
       const role = req.body.role
+      console.log(role);
+      console.log(req.body.data);
+      
       if (role === 'student') {
         const { username, password } = req.body.data;
         const userCredential = await authService.signInStudent({ username, password, role });
@@ -46,7 +50,7 @@ export const authController = {
       }
     } catch (error) {
       console.error('Error signing in:', error);
-      res.status(StatusCodes.UNAUTHORIZED).json(
+      res.status(StatusCodes.NOT_FOUND).json(
         createResponse(false, error.message)
       );
     }
@@ -85,15 +89,13 @@ export const authController = {
       const userCredential = await authService.googleSignIn({ id_token, role });
       console.log('userCredential', userCredential);
       res.status(StatusCodes.OK).json(
-        createResponse(true, 'ログインに成功しました。', {
-          token: userCredential
-        })
+        createResponse(true, 'ログインに成功しました。', userCredential)
       );
     } catch (error) {
       console.error('Error signing in:', error);
-      // res.status(StatusCodes.UNAUTHORIZED).json(
-      //   createResponse(false, 'ログインに失敗しました。', null, error.message)
-      // );
+      res.status(StatusCodes.NOT_FOUND).json(
+        createResponse(false, 'ログインに失敗しました。', null, error.message)
+      );
       throw new Error("ログインに失敗しました。");
 
     }

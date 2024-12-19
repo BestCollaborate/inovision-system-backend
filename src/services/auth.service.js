@@ -149,6 +149,7 @@ export const authService = {
       const additionalClaims = {
         role: userInfo.role,
         fullname: userInfo.fullname,
+        username: userInfo.username,
       };
 
       const token = await auth.createCustomToken(userInfo.username, additionalClaims);
@@ -164,7 +165,6 @@ export const authService = {
     }
   },
   googleSignUp: async (data) => {
-    // const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
     const { id_token, role } = data;
     console.log(data);
     const ticket = jwtDecode(id_token);
@@ -224,20 +224,18 @@ export const authService = {
       };
 
       const userInfo = userDoc.data();
-      console.log('userDoc', userInfo);
-
       const additionalClaims = {
         username: userInfo.username,
         fullname: userInfo.fullname,
         role: userInfo.role,
       };
       // Get the user's ID token
-      console.log('tokenid', userCredential.uid);
-
       const token = await auth.createCustomToken(userCredential.uid, additionalClaims);
-      console.log('token==', token);
 
-      return token;
+      return {
+        token: token,
+        user: additionalClaims
+      };
     } catch (error) {
       console.error('Error in signInUser:', error);
       throw new Error('Invalid email or password');
@@ -245,7 +243,7 @@ export const authService = {
   },
   createPrifile: async (upData) => {
     console.log(upData);
-    const { role, username } = upData.data;
+    const { role, username, fullname } = upData.data;
     try {
       const docRef = db.collection(role).doc(upData.uid);
 
@@ -253,6 +251,7 @@ export const authService = {
       const update = await docRef.update(upData.data);
       const additionalClaims = {
         username: username,
+        fullname: fullname,
         role: role
       };
       // Get the user's ID token
@@ -261,7 +260,10 @@ export const authService = {
       const token = await auth.createCustomToken(upData.uid, additionalClaims);
       console.log('token==', token);
 
-      return token;
+      return {
+        token: token,
+        user: additionalClaims
+      };
     } catch (error) {
       console.error('Error updating document:', error);
       return error;

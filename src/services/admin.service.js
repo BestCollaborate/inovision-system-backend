@@ -1,6 +1,5 @@
 import { auth, db } from '../config/config';
 import { helperService } from './helper.service';
-import { tokenUtils } from '../utils/token.utils';
 
 export const adminService = {
   createAdmin: async (adminData) => {
