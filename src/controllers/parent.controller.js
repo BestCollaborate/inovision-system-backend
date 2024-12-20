@@ -5,7 +5,6 @@ import { log } from 'winston';
 
 export const parentController = {
   createStudent: async (req, res) => {
-    // console.log("createStudent controller", req.body);
     const { formData, role } = req.body;
     try {
       const studentRecord = await parentService.createChild({ formData, role });
@@ -37,7 +36,6 @@ export const parentController = {
     try {
       const username = req.params.id;
       const changeData = req.body;
-      console.log(changeData);
       const children = await parentService.changeChild({ changeData, username });
       res.status(StatusCodes.OK).json(
         createResponse(true, "正常に変更されました。")

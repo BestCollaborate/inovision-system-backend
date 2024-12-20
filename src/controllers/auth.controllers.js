@@ -6,7 +6,6 @@ import { log } from 'winston';
 
 export const authController = {
   signUp: async (req, res) => {
-    console.log('signup', req.body);
     try {
       const { email, password } = req.body.data;
       const role = req.body.role;
@@ -30,8 +29,6 @@ export const authController = {
   signIn: async (req, res) => {
     try {
       const role = req.body.role
-      console.log(role);
-      console.log(req.body.data);
       
       if (role === 'student') {
         const { username, password } = req.body.data;
@@ -61,7 +58,6 @@ export const authController = {
       const { id_token, role } = req.body;
       console.log('google controller', role);
       const userCredential = await authService.googleSignUp({ id_token, role });
-      console.log('google controller', userCredential);
       if (userCredential.success) {
         res.status(StatusCodes.CREATED).json(
           createResponse(true, '成果的に登録されました。', {
@@ -83,7 +79,6 @@ export const authController = {
     }
   },
   googleSignIn: async (req, res) => {
-    console.log('google-signin', req.body);
     const { id_token, role } = req.body.payload;
     try {
       const userCredential = await authService.googleSignIn({ id_token, role });
@@ -101,11 +96,9 @@ export const authController = {
     }
   },
   createProfile: async (req, res) => {
-    console.log(req.params.id);
     try {
       const uid = req.params.id;
       const data = req.body;
-      console.log('dataooooioioiopio', data);
 
       const resData = await authService.createPrifile({ uid, data });
       res.status(StatusCodes.OK).json(
@@ -121,7 +114,6 @@ export const authController = {
     }
   },
   signOut: async (req, res) => {
-    console.log('signout req', req.user);
 
     try {
       await authService.signOut(req.user.uid);

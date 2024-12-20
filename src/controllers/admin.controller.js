@@ -19,7 +19,6 @@ export const adminController = {
       });
       console.log('管理者が正常に作成されました。', adminRecord.email);
     } catch (error) {
-      console.error('管理者はすでに存在します:');
     }
   },
   getTeachers: async (req, res) => {
@@ -52,7 +51,6 @@ export const adminController = {
   deleteTeacher: async (req, res) => {
     try {
       const uid = req.params.id;
-      console.log('deleteteacher', uid);
       await adminService.deleteTeacher({ uid });
       res.status(StatusCodes.OK).json(
         createResponse(true, "ユーザーの削除に成功しました。", null)
@@ -85,7 +83,6 @@ export const adminController = {
         createResponse(true, "更新に成功しました。")
       );
     } catch (error) {
-      console.error('error update parent', error);
       res.status(StatusCodes.NOT_FOUND).json(
         createResponse(false, 'ユーザーが見つかりません。', null,)
       );
@@ -94,13 +91,11 @@ export const adminController = {
   deleteParent: async (req, res) => {
     try {
       const uid = req.params.id;
-      console.log('deleteparent', uid);
       await adminService.deleteParent({ uid });
       res.status(StatusCodes.OK).json(
         createResponse(true, "削除に成功しました。", null)
       );
     } catch (error) {
-      console.error('error delete parent', error);
       res.status(StatusCodes.NOT_FOUND).json(
         createResponse(false, 'ユーザーが見つかりません。', null,)
       );
@@ -113,7 +108,6 @@ export const adminController = {
         createResponse(true, "ユーザーを取得しました。", students)
       );
     } catch (error) {
-      console.error('error get students', error);
       res.status(StatusCodes.NOT_FOUND).json(
         createResponse(false, 'ユーザーが見つかりません。', null,)
       );
@@ -142,7 +136,6 @@ export const adminController = {
         createResponse(true, "ユーザーを削除しました。", null)
       );
     } catch (error) {
-      console.error('error delete student', error);
       res.status(StatusCodes.NOT_FOUND).json(
         createResponse(false, 'ユーザーが見つかりません。', null,)
       );

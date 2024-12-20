@@ -17,7 +17,6 @@ export const adminService = {
         displayName: username
       });
 
-      console.log('Firebase Auth user created successfully:', adminRecord.uid);
       // Send verification email
       // const verificationLink = await auth.generateEmailVerificationLink(email);
 
@@ -88,7 +87,6 @@ export const adminService = {
   },
   updateParent: async ({ uid, updateData }) => {
     try {
-      console.log('upparent', uid, updateData);
       const parentRef = db.collection('parent').doc(uid);
       await parentRef.update(updateData);
       return;
@@ -98,7 +96,6 @@ export const adminService = {
   },
   deleteParent: async ({ uid }) => {
     try {
-      console.log('deleteparent', uid);
       await auth.deleteUser(uid);
       const docRef = db.collection('parent').doc(uid);
       await docRef.delete();
@@ -124,7 +121,6 @@ export const adminService = {
   },
   updateStudent: async ({ username, updateData }) => {
     try {
-      console.log('updateStudent', username, updateData);
       const studentRef = db.collection('student').doc(username);
       await studentRef.update(updateData);
       return;
@@ -134,7 +130,6 @@ export const adminService = {
   },
   deleteStudent: async ({ username }) => {
     try {
-      console.log('deleteStudent', username);
       const studentRef = db.collection('student').doc(username);
       await studentRef.delete();
       return;
@@ -144,9 +139,7 @@ export const adminService = {
   },
   deleteAdmin: async () => {
     try {
-      console.log('delete');
       await auth.deleteUser("L0z7du5hzsYCz8f8Sy3OF5TdaZe2");
-      console.log('deleteadmin');
     } catch (error) {
     }
   }
