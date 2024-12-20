@@ -19,9 +19,9 @@ io.on('connection', (socket) => {
         socket.join(lectureId);
     });
     socket.on('join-room', (data) => {
-        const { lectureId } = data;
+        const { lectureId, role } = data;
         console.log('user joined room ===> ' + lectureId);
-        rooms[lectureId] = { chat: [] }
+        rooms[lectureId] = { chat: [], [role]: socket.id }
         socket.join(lectureId);
     });
 
@@ -31,6 +31,15 @@ io.on('connection', (socket) => {
         rooms[lectureId].chat.push({ message, userId });
         socket.to(lectureId).emit('message', rooms[lectureId].chat);
         socket.emit('message', rooms[lectureId].chat);
+    });
+
+    socket.on('raise-hand', (data) => {
+        const { lectureId, userId } = data;
+        console.log('user raised hand ===> ' + userId);
+        const teacher = rooms[lectureId]?.teacher;
+        if (teacher) {
+            socket.to(teacher).emit('raise-hand', { userId });
+        }
     });
 
     socket.on('disconnect', () => {
