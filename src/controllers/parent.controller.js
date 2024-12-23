@@ -52,7 +52,8 @@ export const parentController = {
       const username = req.params.id;
       console.log(username);
       
-      await parentService.deleteChild(username);
+      const resData = await parentService.deleteChild(username);
+      console.log('resDataController', resData);
       res.status(StatusCodes.OK).json(
         createResponse(true, "正常に削除されました。")
       );

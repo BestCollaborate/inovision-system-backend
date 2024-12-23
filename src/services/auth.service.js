@@ -218,7 +218,7 @@ export const authService = {
       const userDoc = await db.collection(role).doc(userCredential.uid).get();
       if (!userDoc.exists) {
         console.log('No such user document!');
-        return;
+        throw new Error('Invalid email or password');
       };
 
       const userInfo = userDoc.data();

@@ -29,7 +29,7 @@ export const authController = {
   signIn: async (req, res) => {
     try {
       const role = req.body.role
-      
+
       if (role === 'student') {
         const { username, password } = req.body.data;
         const userCredential = await authService.signInStudent({ username, password, role });
@@ -101,10 +101,10 @@ export const authController = {
       const data = req.body;
 
       const resData = await authService.createPrifile({ uid, data });
+      console.log('resData', resData);
+
       res.status(StatusCodes.OK).json(
-        createResponse(true, 'プロフィールを登録しました。', {
-          token: resData
-        })
+        createResponse(true, 'プロフィールを登録しました。', resData)
       );
     } catch (error) {
       console.error("error crateprofile", error);

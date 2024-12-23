@@ -74,8 +74,8 @@ export const parentService = {
     try {
       console.log('deleteadmin', username);
       const docRef = db.collection('student').doc(username);
-      await docRef.delete();
-      return;
+      const deleteDoc = await docRef.delete();
+      return deleteDoc;
     } catch (error) {
       throw new Error("");
     }
