@@ -19,8 +19,6 @@ export const authService = {
         emailVerified: false,
       });
 
-      auth.delete()
-
       console.log('Firebase Auth user created successfully:', userRecord.uid);
       // Send verification email
       // const verificationLink = await auth.generateEmailVerificationLink(email);
