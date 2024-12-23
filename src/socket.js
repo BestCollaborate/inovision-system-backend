@@ -24,16 +24,27 @@ exports.createSockerServer = function (server) {
             const existingRoom = rooms[lectureId] || { chat: [] };
             rooms[lectureId] = { ...existingRoom, [role]: socket.id }
             socket.join(lectureId);
+            if(rooms[lectureId]) {
+                socket.emit('message', rooms[lectureId].chat)
+            }
         });
     
         socket.on('send-message', (data) => {
-            const { lectureId, userId, message } = data;
+            const { lectureId, userId, message, role } = data;
             console.log('user sent message ===> ' + message);
-            rooms[lectureId].chat.push({ message, userId });
+            const currentDate = new Date();
+
+            rooms[lectureId].chat.push({ 
+                message, 
+                userId, 
+                role, 
+                date: `${String(currentDate.getHours()).padStart(2, 0)}:${String(currentDate.getMinutes()).padStart(2, 0)}`,
+            });
+
             socket.to(lectureId).emit('message', rooms[lectureId].chat);
             socket.emit('message', rooms[lectureId].chat);
         });
-    
+
         socket.on('raise-hand', (data) => {
             const { lectureId, userId } = data;
             console.log('user raised hand ===> ' + userId);
