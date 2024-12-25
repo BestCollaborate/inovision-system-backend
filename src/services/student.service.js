@@ -15,8 +15,8 @@ export const studentService = {
       throw new Error(error);
     }
   },
-  updateProfile: async (updateData) => {
-    const { uid, updateData } = updateData;
+  updateProfile: async (data) => {
+    const { uid, updateData } = data;
     try {
       const studentRef = db.collection('student').doc(uid);
       const doc = await studentRef.get();
