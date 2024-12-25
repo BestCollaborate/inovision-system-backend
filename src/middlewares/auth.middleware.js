@@ -4,9 +4,9 @@ import { createResponse } from '../utils/response.utils.js';
 import jwtDecode from "jsonwebtoken"
 
 export const authMiddleware = async (req, res, next) => {
-  // Get the token from the Authorization header
+  // Get the token from the Authorization 
+  
   const token = req.headers.authorization?.split('Bearer ')[1]; // Bearer <token>
-  console.log('middlewretoken', token);
   if (!token) {
     return res.status(StatusCodes.UNAUTHORIZED).json(createResponse(false, '', null));
   }

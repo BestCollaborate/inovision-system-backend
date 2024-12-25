@@ -1,4 +1,5 @@
 import { auth, db } from '../config/config';
+import { get } from '../routes/videosdk.route';
 import { helperService } from './helper.service';
 
 export const parentService = {
@@ -78,6 +79,38 @@ export const parentService = {
       return deleteDoc;
     } catch (error) {
       throw new Error("");
+    }
+  },
+  getProfile: async ({ uid }) => {
+    try {
+      const docRef = db.collection('parent').doc(uid);
+      const doc = await docRef.get();
+      if (doc.exists) {
+        const data = doc.data();
+        return data;
+      } else {
+        throw new Error("ユーザーが見つかりません");
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+  updateProfile: async ({ uid, updateData }) => {
+    try {
+      const docRef = db.collection('parent').doc(uid);
+      const update = await docRef.update(updateData);
+      return update;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+  deleteProfile: async ({ uid }) => {
+    try {
+      const docRef = db.collection('parent').doc(uid);
+      const deleteDoc = await docRef.delete();
+      return deleteDoc;
+    } catch (error) {
+      throw new Error(error);
     }
   }
 }

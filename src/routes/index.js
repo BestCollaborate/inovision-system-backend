@@ -7,6 +7,7 @@ import lectureRoutes from './lecture.route';
 import adminRoutes from './admin.route';
 import parentRoutes from './parent.route';
 import videosdkRoutes from './videosdk.route';
+import userRoutes from './user.route';
 
 const defaultRoutes = [
   {
@@ -28,6 +29,10 @@ const defaultRoutes = [
   {
     path: '/video-sdk',
     route: videosdkRoutes
+  },
+  {
+    path: '/user',
+    route: userRoutes
   }
 ];
 
