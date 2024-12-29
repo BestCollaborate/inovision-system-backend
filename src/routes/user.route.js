@@ -11,19 +11,19 @@ router.get('/teacher-profile/:id', authMiddleware, teacherController.getProfile)
 
 router.put('/teacher-profile/:id', authMiddleware, teacherController.updateProfile);
 
-router.delete('/teacher-profile/:id', authMiddleware, teacherController.deleteProfile);
+router.delete('/teacher-profile', authMiddleware, teacherController.deleteProfile);
 
-router.get('parent-profile/:id', authMiddleware, parentController.getProfile);
+router.get('/parent-profile/:id', authMiddleware, parentController.getProfile);
 
-router.put('parent-profile/:id', authMiddleware, parentController.updateProfile);
+router.put('/parent-profile/:id', authMiddleware, parentController.updateProfile);
 
-router.delete('parent-profile/:id', authMiddleware, parentController.deleteProfile);
+router.delete('/parent-profile', authMiddleware, parentController.deleteProfile);
 
 router.get('/student-profile/:id', authMiddleware, studentController.getProfile);
 
 router.put('/student-profile/:id', authMiddleware, studentController.updateProfile);
 
-router.delete('/student-profile/:id', authMiddleware, studentController.deleteProfile);
+router.delete('/student-profile', authMiddleware, studentController.deleteProfile);
 
 // router.delete('/sign-out', authMiddleware, authController.signOut)
 

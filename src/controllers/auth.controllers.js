@@ -114,7 +114,8 @@ export const authController = {
     }
   },
   signOut: async (req, res) => {
-
+    console.log(req.user.uid);
+    
     try {
       await authService.signOut(req.user.uid);
       res.status(StatusCodes.OK).json(

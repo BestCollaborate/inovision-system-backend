@@ -96,6 +96,8 @@ export const parentService = {
     }
   },
   updateProfile: async ({ uid, updateData }) => {
+    console.log(uid, updateData);
+
     try {
       const docRef = db.collection('parent').doc(uid);
       const update = await docRef.update(updateData);
@@ -106,11 +108,13 @@ export const parentService = {
   },
   deleteProfile: async ({ uid }) => {
     try {
-      const docRef = db.collection('parent').doc(uid);
-      const deleteDoc = await docRef.delete();
-      return deleteDoc;
+      const deleteFromAdmin = await auth.deleteUser(uid);
+      console.log("deleteparent");
+
+      const docRef = db.collection('parent').doc(uid).delete();
+      return;
     } catch (error) {
-      throw new Error(error);
+      throw new Error("ユーザーが存在しません");
     }
   }
 }

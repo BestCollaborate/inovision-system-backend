@@ -1,4 +1,4 @@
-import { db } from '../config/config';
+import { auth, db } from '../config/config';
 
 export const teacherService = {
   getProfile: async ({ uid }) => {
@@ -18,6 +18,7 @@ export const teacherService = {
   },
   updateProfile: async (data) => {
     const { uid, updateData } = data;
+
     try {
       const teacherRef = db.collection('teacher').doc(uid);
       const doc = await teacherRef.get();
@@ -34,17 +35,12 @@ export const teacherService = {
   deleteProfile: async (deleteData) => {
     const { uid } = deleteData;
     try {
-      const teacherRef = db.collection('teacher').doc(uid);
-      const doc = await teacherRef.get();
-      if (doc.empty) {
-        throw new Error("ユーザーが存在しません");
-
-      } else {
-        await teacherRef.delete();
-        return;
-      }
+      const deleteFromAdmin = await auth.deleteUser(uid);
+      const teacherRef = db.collection('teacher').doc(uid).delete();
+      console.log("deleteteacher");
+      return;
     } catch (error) {
-      throw new Error(error);
+      throw new Error("ユーザーが存在しません");
     }
   },
 };

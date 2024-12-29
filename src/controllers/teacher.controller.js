@@ -35,10 +35,12 @@ export const teacherController = {
   },
   deleteProfile: async (req, res) => {
     try {
-      const uid = req.params.id;
+      const uid = req.user.uid;
+      console.log(uid);
+
       const profile = await teacherService.deleteProfile({ uid });
       res.status(StatusCodes.OK).json(
-        createResponse(true, "プロフィールを削除しました。", null)
+        createResponse(true, "アカウントを削除しました。", null)
       );
     } catch (error) {
       console.error('error delete profile', error);

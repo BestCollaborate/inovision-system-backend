@@ -2,9 +2,9 @@ import { db } from '../config/config';
 
 export const studentService = {
   getProfile: async (getData) => {
-    const { uid } = getData;
+    const { username } = getData;
     try {
-      const studentRef = db.collection('student').doc(uid);
+      const studentRef = db.collection('student').doc(username);
       const doc = await studentRef.get();
       if (doc.empty) {
         throw new Error("ユーザーが存在しません");
@@ -16,9 +16,9 @@ export const studentService = {
     }
   },
   updateProfile: async (data) => {
-    const { uid, updateData } = data;
+    const { username, updateData } = data;
     try {
-      const studentRef = db.collection('student').doc(uid);
+      const studentRef = db.collection('student').doc(username);
       const doc = await studentRef.get();
       if (doc.empty) {
         throw new Error("ユーザーが存在しません");
@@ -29,20 +29,14 @@ export const studentService = {
     } catch (error) {
       throw new Error(error);
     }
-  }, 
+  },
   deleteProfile: async (deleteData) => {
-    const { uid } = deleteData;
+    const { username } = deleteData;
     try {
-      const studentRef = db.collection('student').doc(uid);
-      const doc = await studentRef.get();
-      if (doc.empty) {
-        throw new Error("ユーザーが存在しません");
-      } else {
-        await studentRef.delete();
-        return;
-      }
+      const studentRef = db.collection('student').doc(username).delete();
+      return;
     } catch (error) {
-      throw new Error(error);
+      throw new Error("ユーザーが存在しません");
     }
   },
 };

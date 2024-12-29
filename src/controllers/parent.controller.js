@@ -97,7 +97,7 @@ export const parentController = {
   },
   deleteProfile: async (req, res) => {
     try {
-      const uid = req.params.id;
+      const uid = req.user.uid;
       const profile = await parentService.deleteProfile({ uid });
       res.status(StatusCodes.OK).json(
         createResponse(true, "プロフィールを削除しました。", null)

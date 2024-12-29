@@ -30,6 +30,8 @@ const httpSever = createServer(app);
 app.use('/api', routes);
 
 app.use('/', (req, res) => {
+  console.log(req.params.id);
+  
   res.send('Server is working');
 });
 

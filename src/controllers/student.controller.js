@@ -1,9 +1,12 @@
+import { StatusCodes } from 'http-status-codes';
+import { createResponse } from '../utils/response.utils.js';
+import { studentService } from '../services/student.service.js';
 
 export const studentController = {
   getProfile: async (req, res) => {
     try {
-      const uid = req.params.id;
-      const profile = await studentService.getProfile({ uid });
+      const username = req.params.id;
+      const profile = await studentService.getProfile({ username });
       res.status(StatusCodes.OK).json(
         createResponse(true, "", profile)
       );
@@ -16,9 +19,9 @@ export const studentController = {
   },
   updateProfile: async (req, res) => {
     try {
-      const uid = req.params.id;
+      const username = req.params.id;
       const updateData = req.body;
-      const profile = await studentService.updateProfile({ uid, updateData });
+      const profile = await studentService.updateProfile({ username, updateData });
       res.status(StatusCodes.OK).json(
         createResponse(true, "プロフィールを更新しました。", null)
       );
@@ -31,8 +34,8 @@ export const studentController = {
   },
   deleteProfile: async (req, res) => {
     try {
-      const uid = req.params.id;
-      const profile = await studentService.deleteProfile({ uid });
+      const username = req.user.uid;
+      const profile = await studentService.deleteProfile({ username });
       res.status(StatusCodes.OK).json(
         createResponse(true, "プロフィールを削除しました。", null)
       );
