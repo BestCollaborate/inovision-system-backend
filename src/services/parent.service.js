@@ -4,13 +4,14 @@ import { helperService } from './helper.service';
 
 export const parentService = {
   createChild: async (childData) => {
-    const { password, username, fullname, furigana, gender, parentId, grade } = childData.formData;
-    const role = childData.role;
+    console.log(childData);
+    
+    const { password, username, firstname, lastname, firstname_kana, lastname_kana, gender, parentId, grade } = childData;
     try {
       console.log('Creating user with data:', childData);
       const { hash, salt } = await helperService.hashPassword(password);
       // Store additional user data in Firestore
-      const studentRef = db.collection(role).doc(username);
+      const studentRef = db.collection('student').doc(username);
       const doc = await studentRef.get();
       if (doc.exists) {
         throw new Error("ユーザー名が既に存在します");
@@ -19,11 +20,13 @@ export const parentService = {
       // Save the new user
       await studentRef.set({
         username,
-        fullname,
-        furigana,
+        firstname,
+        lastname,
+        firstname_kana, 
+        lastname_kana,
         gender,
         grade,
-        role,
+        role:'student',
         parentId,
         passwordHash: hash,
         passwordSalt: salt,

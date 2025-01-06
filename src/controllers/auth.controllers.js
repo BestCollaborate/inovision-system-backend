@@ -1,14 +1,15 @@
 import { StatusCodes } from 'http-status-codes';
 
 import { authService } from '../services/auth.service.js';
+import { parentService } from '../services/parent.service.js';
 import { createResponse } from '../utils/response.utils.js';
-import { log } from 'winston';
 
 export const authController = {
   signUp: async (req, res) => {
+    console.log('siginup data9099090',req.body);
+    
     try {
-      const { email, password } = req.body.data;
-      const role = req.body.role;
+      const { email, password, role } = req.body;
       const userRecord = await authService.signUp({
         email,
         password,
@@ -18,6 +19,33 @@ export const authController = {
 
       res.status(StatusCodes.CREATED).json(
         createResponse(true, '成果的に登録されました。', { uid: userRecord.uid })
+      );
+    } catch (error) {
+      console.error('Error creating user:', error);
+      res.status(StatusCodes.BAD_REQUEST).json(
+        createResponse(false, '登録に失敗しました。', null, error.message)
+      );
+    }
+  },
+  studentSignUp: async (req, res) => {
+    console.log(req.body);
+    const { studentData, parentData } = req.body;
+    try {
+
+      const parentRecord = await authService.createParent(parentData);
+      console.log('userRecord', parentRecord);
+      const stuData = { ...studentData, parentId: parentRecord.uid };
+      const studentRecord = await parentService.createChild(stuData);
+
+      console.log(studentRecord);
+      
+
+      res.status(StatusCodes.CREATED).json(
+        createResponse(true, '成果的に登録されました。', {
+          uid: studentRecord.username,
+          parentId: studentRecord.parentId,
+          role: studentRecord.role,
+        })
       );
     } catch (error) {
       console.error('Error creating user:', error);
@@ -99,6 +127,8 @@ export const authController = {
     try {
       const uid = req.params.id;
       const data = req.body;
+      console.log('resData', data);
+
 
       const resData = await authService.createPrifile({ uid, data });
       console.log('resData', resData);
@@ -115,7 +145,7 @@ export const authController = {
   },
   signOut: async (req, res) => {
     console.log(req.user.uid);
-    
+
     try {
       await authService.signOut(req.user.uid);
       res.status(StatusCodes.OK).json(

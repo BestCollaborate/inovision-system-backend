@@ -5,7 +5,12 @@ import { authController } from '../controllers/auth.controllers';
 import { validateRequest } from '../middlewares/validation.middleware';
 import { authMiddleware } from '../middlewares/auth.middleware';
 
-router.post('/sign-up',
+router.post('/student-signup',
+  validateRequest,
+  authController.studentSignUp
+);
+
+router.post('/teacher-signup',
   validateRequest,
   authController.signUp
 );

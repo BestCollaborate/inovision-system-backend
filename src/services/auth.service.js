@@ -28,9 +28,10 @@ export const authService = {
         const teacherDoc = db.collection(role).doc(userRecord.uid);
         await teacherDoc.set({
           uid: userRecord.uid,
-          username: "",
-          fullname: "",
-          furigana: "",
+          firstname: "",
+          lastname: "",
+          firstname_kana: "", 
+          lastname_kana: "",
           gender: "",
           role: role,
           email,
@@ -54,6 +55,59 @@ export const authService = {
           updatedAt: new Date().toISOString()
         });
       }
+
+      // try {
+      //   const emailVerified = await sendVerificationEmail(email, verificationLink);
+      //   console.log('emailverified', emailVerified);
+      // } catch (error) {
+      //   console.error('verifyerror', error);
+      //   throw new Error("Can not send verify email");
+      // }
+
+      console.log('User data stored in Firestore successfully');
+      return {
+        uid: userRecord.uid,
+      };
+    } catch (error) {
+      console.error('Error in createUser:', error);
+      throw error;
+    }
+  },
+  createParent: async (userData) => {
+    const { email, password, firstname, lastname, firstname_kana, lastname_kana, phonenumber } = userData;
+
+    try {
+      console.log('Creating user with data:', { email, password });
+      const { hash, salt } = await helperService.hashPassword(password);
+
+      // Create Firebase auth user
+      const userRecord = await auth.createUser({
+        email: email,
+        password,
+        emailVerified: false,
+      });
+
+      console.log('Firebase Auth user created successfully:', userRecord.uid);
+      // Send verification email
+      // const verificationLink = await auth.generateEmailVerificationLink(email);
+
+      // Store additional user data in Firestore
+      const teacherDoc = db.collection('parent').doc(userRecord.uid);
+      await teacherDoc.set({
+        uid: userRecord.uid,
+        email,
+        firstname,
+        lastname,
+        firstname_kana,
+        lastname_kana,
+        phonenumber,
+        role: 'parent',
+        passwordHash: hash,
+        passwordSalt: salt,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      });
+
 
       // try {
       //   const emailVerified = await sendVerificationEmail(email, verificationLink);
@@ -242,7 +296,7 @@ export const authService = {
   },
   createPrifile: async (upData) => {
     console.log(upData);
-    const { role, username, fullname } = upData.data;
+    const { role, username } = upData.data;
     try {
       const docRef = db.collection(role).doc(upData.uid);
 
@@ -250,17 +304,16 @@ export const authService = {
       const update = await docRef.update(upData.data);
       const additionalClaims = {
         username: username,
-        fullname: fullname,
         role: role
       };
       // Get the user's ID token
-      console.log('tokenid', upData.uid);
+      // console.log('tokenid', upData.uid);
 
-      const token = await auth.createCustomToken(upData.uid, additionalClaims);
-      console.log('token==', token);
+      // const token = await auth.createCustomToken(upData.uid, additionalClaims);
+      // console.log('token==', token);
 
       return {
-        token: token,
+        // token: token,
         user: additionalClaims
       };
     } catch (error) {
