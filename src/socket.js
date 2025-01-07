@@ -53,10 +53,29 @@ exports.createSockerServer = function (server) {
             if (teacher) {
                 io.to(teacher).emit('raise-hand', { userId });
             }
-        });
+        }); 
     
         socket.on('disconnect', () => {
             console.log('user disconnected');
         });
     });
+
+    const whiteboard = {}
+
+    io.of('/whiteboard', (socket) => {
+        socket.on('wb-join', (id) => {
+            socket.join(id);
+            console.log('>>>>>>> wb - join', id, "---");
+            if(whiteboard[id]) {
+                socket.emit('wb-init', whiteboard[id]);
+            }
+        });
+
+        socket.on('wb-update', ({ data, roomId }) => {
+            // whiteboard[id] = data;
+            console.log(roomId, data);
+            socket.to(roomId).emit("wb-update", data);
+            console.log(roomId, data)
+        })
+    })
 }
