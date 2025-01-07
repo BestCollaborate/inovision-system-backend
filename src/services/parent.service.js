@@ -7,6 +7,8 @@ export const parentService = {
     console.log(childData);
     
     const { password, username, firstname, lastname, firstname_kana, lastname_kana, gender, parentId, grade } = childData;
+    console.log(password);
+
     try {
       console.log('Creating user with data:', childData);
       const { hash, salt } = await helperService.hashPassword(password);

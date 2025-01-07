@@ -5,6 +5,8 @@ import { adminController } from '../controllers/admin.controller';
 import { validateRequest } from '../middlewares/validation.middleware';
 import { authMiddleware } from '../middlewares/auth.middleware';
 
+router.get("/get-user-count", adminController.getUserCount);
+
 router.get('/get-teachers', adminController.getTeachers);
 
 router.put('/update-teacher/:id', adminController.updateTeacher);

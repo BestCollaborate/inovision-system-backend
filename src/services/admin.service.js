@@ -38,6 +38,26 @@ export const adminService = {
       throw error;
     }
   },
+  getUserCount: async () => {
+    try {
+      let userCounts = {
+        student: 0,
+        teacher: 0,
+        parent: 0,
+      };
+
+      const collections = ['student', 'teacher', 'parent'];
+      for (const collection of collections) {
+        const snapshot = await db.collection(collection).get();
+        console.log(snapshot.size);
+
+        userCounts[collection] = snapshot.size; // Count the number of documents in each collection
+      }
+      return userCounts;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
   getTeachers: async () => {
     try {
       const teacherRef = await db.collection('teacher').get();

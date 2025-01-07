@@ -21,6 +21,18 @@ export const adminController = {
     } catch (error) {
     }
   },
+  getUserCount: async(req, res) => {  
+    try {
+      const count = await adminService.getUserCount();
+      res.status(StatusCodes.OK).json(
+        createResponse(true, "", count)
+      );
+    } catch (error) {
+      res.status(StatusCodes.BAD_REQUEST).json(
+        createResponse(false, '管理者が取得できませんでした。', null, error.message)
+      );
+    }
+  },
   getTeachers: async (req, res) => {
     try {
       const teachers = await adminService.getTeachers();

@@ -7,7 +7,7 @@ export const parentController = {
   createStudent: async (req, res) => {
     const { formData, role } = req.body;
     try {
-      const studentRecord = await parentService.createChild({ formData, role });
+      const studentRecord = await parentService.createChild(formData);
       res.status(StatusCodes.CREATED).json(
         createResponse(true, "生徒が正常に作成されました。")
       );
