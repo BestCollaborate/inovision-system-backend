@@ -72,10 +72,9 @@ exports.createSockerServer = function (server) {
         });
 
         socket.on('wb-update', ({ data, roomId }) => {
-            // whiteboard[id] = data;
-            console.log(roomId, data);
+            whiteboard[roomId] = data;
+            console.log(roomId);
             socket.to(roomId).emit("wb-update", data);
-            console.log(roomId, data)
         })
     })
 }
