@@ -4,8 +4,8 @@ import logger from './config/logger';
 
 let server = app;
 createSockerServer(server);
-server.listen(80, () => {
-  logger.info(`Listening to port 80`);
+server.listen(process.env.PORT, () => {
+  logger.info(`Listening to port ${process.env.PORT}`);
 });
 
 // socket_server.listen(parseInt(process.env.PORT) + 1, () => {
