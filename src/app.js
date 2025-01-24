@@ -20,8 +20,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // cors を有効
-app.use(cors());
-app.options('*', cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://invision-system.web.app'] // Allow both origins
+}));
 
 app.use(express.static('public'));
 
