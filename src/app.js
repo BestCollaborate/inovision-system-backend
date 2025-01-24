@@ -20,15 +20,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // cors を有効
-// app.use(cors());
-// app.options('*', cors());
-const corsOptions = {
-  origin: 'https://invision-system.web.app', // Allow only this origin
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
-  credentials: true, // Allow credentials (like cookies, authorization headers, etc.)
-};
-
-app.use(cors(corsOptions)); // Use CORS with specified options
+app.use(cors());
+app.options('*', cors());
 
 app.use(express.static('public'));
 
