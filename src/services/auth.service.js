@@ -27,7 +27,7 @@ export const authService = {
       if (role === "teacher") {
         const teacherDoc = db.collection(role).doc(userRecord.uid);
         await teacherDoc.set({
-          uid: userRecord.uid,
+          uid: userRecord.uid,  
           firstname: "",
           lastname: "",
           firstname_kana: "", 

@@ -6,8 +6,8 @@ import { createResponse } from '../utils/response.utils.js';
 
 export const authController = {
   signUp: async (req, res) => {
-    console.log('siginup data9099090',req.body);
-    
+    console.log('siginup data9099090', req.body);
+
     try {
       const { email, password, role } = req.body;
       const userRecord = await authService.signUp({
@@ -33,12 +33,8 @@ export const authController = {
     try {
 
       const parentRecord = await authService.createParent(parentData);
-      console.log('userRecord', parentRecord);
       const stuData = { ...studentData, parentId: parentRecord.uid };
       const studentRecord = await parentService.createChild(stuData);
-
-      console.log(studentRecord);
-      
 
       res.status(StatusCodes.CREATED).json(
         createResponse(true, '成果的に登録されました。', {
@@ -50,7 +46,7 @@ export const authController = {
     } catch (error) {
       console.error('Error creating user:', error);
       res.status(StatusCodes.BAD_REQUEST).json(
-        createResponse(false, '登録に失敗しました。', null, error.message)
+        createResponse(false, `${parentData.email}でユーザーが登録されています。`, null, error.message)
       );
     }
   },
